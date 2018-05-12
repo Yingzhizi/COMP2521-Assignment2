@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "Graph.h"
+#include "LList.h"
 
 
 typedef struct GraphRep {
@@ -45,7 +46,8 @@ void insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     assert(g != NULL && validV(g, src) && validV(g, dest));
     //if the edge is not in the graph
     if (!inList(g->edges[src], dest)) {
-        g->edges[src] = insertLL(g->edges[src], dest, weight);
+        g->edges[src] = insertLL(g->edges[src], dest);
+        g->edges[src]->weight = weight;
     }
     g->nE++;
 }
