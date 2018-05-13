@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "PQ.h"
 #define INF 0x7FFFFFFF
