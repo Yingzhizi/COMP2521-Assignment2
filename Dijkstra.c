@@ -35,7 +35,7 @@ ShortestPaths dijkstra(Graph g, Vertex source) {
 
     //adjListNode *vertexSet = {};
     PQ vertexSet = newPQ();
-
+    int seen[g->nV];
     ShortestPaths *sp = malloc(sizeof(struct ShortestPaths));
     assert (sp != NULL);
     sp->src = source;
@@ -43,6 +43,7 @@ ShortestPaths dijkstra(Graph g, Vertex source) {
     for (int i = 0; i < g->nV; i++) {
         sp->dist[i] = INF;
         sp->pred[i] = -1;
+        seen[i] = 0;
         addPQ(vertexSet, g->edges[i]);
     }
     sp->dist[source] = 0;
@@ -51,7 +52,15 @@ ShortestPaths dijkstra(Graph g, Vertex source) {
         adjListNode *curr = dequeuePQ(vertexSet);
         int i = 0;
         while(i < g->nV){
-            if ()
+            AdjList tmp = outIncident(g, curr->w);
+            while (!tmp->next) {
+                sp->pred[tmp->next] = tmp->w;
+                sp->dist[tmp] = tmp->weight;
+                tmp = tmp->next;
+            }
+            //find shortest distance
+            //update that index that index as the next node
+            //push it into queue and start again
         }
     }
 }

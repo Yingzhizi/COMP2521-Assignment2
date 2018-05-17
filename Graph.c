@@ -9,6 +9,7 @@ typedef struct GraphRep {
     int nV;
     int nE;
     adjListNode **edges;
+    adjListNode **inedges;
 } GraphRep;
 
 /**
@@ -32,6 +33,10 @@ Graph newGraph(int noNodes) {
     g->edges = malloc(noNodes * sizeof(adjListNode));
     assert(g->edges != NULL);
 
+    //create the array of incident edges
+    g->inedges = malloc(noNode * sizeof(adjListNode));
+    assert(g->inedges != NULL);
+
     //fill the edge array up
     for (int i = 0; i < noNodes; i++)
         g->edges[i] = NULL;
@@ -46,8 +51,12 @@ void insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     assert(g != NULL && validV(g, src) && validV(g, dest));
     //if the edge is not in the graph
     if (!inList(g->edges[src], dest)) {
+        //insert to out-incident
         g->edges[src] = insertLL(g->edges[src], dest);
-        g->edges[src]->weight = weight;
+        g->edges[src].weight = weight;
+
+        //insert to in-incident
+        g->inedges[dest] = insertLL(g->inedges[dest], src);
     }
     g->nE++;
 }
@@ -85,6 +94,7 @@ AdjList outIncident(Graph g, Vertex v) {
 **/
 AdjList inIncident(Graph g, Vertex v) {
     assert(g != NULL && validV(g, v));
+    return (g->inedges[v]);
 }
 
 
