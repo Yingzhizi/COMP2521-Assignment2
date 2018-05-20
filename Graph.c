@@ -8,7 +8,7 @@
 typedef struct GraphRep {
     int nV;
     int nE;
-    adjListNode **edges;
+    AdjList *edges;
     adjListNode **inedges;
 } GraphRep;
 
@@ -30,11 +30,12 @@ Graph newGraph(int noNodes) {
     g->nE = 0;
 
     //create the array of edges and check to make sure it is valid
-    g->edges = malloc(noNodes * sizeof(adjListNode));
-    assert(g->edges != NULL);
+    //allocate memory for each row
+    // g->edges = malloc(noNodes * sizeof(adjListNode *));
+    // assert(g->edges != NULL);
 
     //create the array of incident edges
-    g->inedges = malloc(noNode * sizeof(adjListNode));
+    g->inedges = malloc(noNode * sizeof(AdjList));
     assert(g->inedges != NULL);
 
     //fill the edge array up
@@ -64,14 +65,14 @@ void insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
 void  removeEdge(Graph g, Vertex src, Vertex dest) {
     assert(g != NULL && validV(g, src) && validV(g, dest));
     if (inList(g->edges[src], dest)) {
-        g->edges[src] = removeLL(g->edges[src], dest);
+        g->edges[src] = deleteLL(g->edges[src], dest);
     }
     g->nE--;
 }
 
 bool  adjacent(Graph g, Vertex src, Vertex dest) {
     assert(g != NULL && validV(g, src) && validV(g, dest));
-    return (inList(g->edges[src], dest));
+    return (inLL(g->edges[src], dest));
 }
 
 int  numVerticies(Graph g) {
@@ -87,7 +88,20 @@ AdjList outIncident(Graph g, Vertex v) {
     assert(g != NULL && validV(g, v));
     return (g->edges[v]);
 }
+
+int countOut(Graph g, Vertex v) {
+    assert(g != NULL && validV(g, v));
+    return count(g->edges[v]);
+}
+
+int countIn(Graph g, Vertex v) {
+    assert(g != NULL && validV(g, v));
+    return count(g->inedges[v]);
+}
+
 /*
+
+
 
  * Returns a list of adjacent vertices
  * on incoming edges from a given vertex.

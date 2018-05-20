@@ -1,16 +1,17 @@
 // Linked list implementation ... COMP2521
 #include "LList.h"
+#include "Graph.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct Node {
-   int         v;
-   struct Node *next;
-} Node;
+// typedef struct Node {
+//    int         v;
+//    struct Node *next;
+// } Node;
 
 Node *makeNode(int n) {
-   Node *new = malloc(sizeof(Node));
+   Node *new = malloc(sizeof(adjListNode));
    assert(new != NULL);
    new->v = n;
    new->next = NULL;
@@ -61,4 +62,13 @@ void freeLL(List L) {
       freeLL(L->next);
       free(L);
    }
+}
+
+int count(List L) {
+    int c = 0;
+    while (L != NULL) {
+        c++;
+        L = L->next;
+    }
+    return c;
 }

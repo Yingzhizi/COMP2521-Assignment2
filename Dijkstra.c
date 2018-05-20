@@ -50,19 +50,20 @@ ShortestPaths dijkstra(Graph g, Vertex source) {
 
     while(!PQEmpty(vertexSet)){
         adjListNode *curr = dequeuePQ(vertexSet);
-        int i = 0;
-        while(i < g->nV){
-            AdjList tmp = outIncident(g, curr->w);
-            while (!tmp->next) {
-                sp->pred[tmp->next] = tmp->w;
-                sp->dist[tmp] = tmp->weight;
-                tmp = tmp->next;
+        Vertex v;
+        for (v = 0; v < g->nV; v++){
+            if (adjacent(g, curr->v, v)) {
+                if (sp->dist[curr] + g->edges[curr].weight < sp->dist[v]) {
+                    sp->dist[v] = sp->dist[curr] + g->edges[curr];
+                    sp->pred[v] = curr;
+                }
             }
             //find shortest distance
             //update that index that index as the next node
             //push it into queue and start again
         }
     }
+    return sp;
 }
 
 void  showShortestPaths(ShortestPaths sp) {
