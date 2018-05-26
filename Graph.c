@@ -12,6 +12,12 @@ typedef struct GraphRep {
     adjListNode **inedges;
 } GraphRep;
 
+//global functions;
+double countOutW(Graph, Vertex);
+int countOut(Graph, Vertex);
+int countOut(Graph, Vertex);
+AdjList inIncident(Graph, Vertex);
+
 /**
   *Function is used to make a new graph
   *
@@ -97,6 +103,21 @@ int countOut(Graph g, Vertex v) {
 int countIn(Graph g, Vertex v) {
     assert(g != NULL && validV(g, v));
     return count(g->inedges[v]);
+}
+
+double countOutW(Graph g, Vertex v){
+    assert(g != NULL && validV(g, v));
+    double totalWeight = 0;
+    ShortestPaths *sp = malloc(sizeof(struct ShortestPaths));
+    assert(sp != NULL);
+    //getting shortest path
+    sp = dijkstra(g, v);
+    //weight will change depending on where we are
+    for(int j = 0; j < sp->noNodes; j++){
+        totalWeight += sp->dist[j];
+    }
+
+    return totalWeight;
 }
 
 /*
