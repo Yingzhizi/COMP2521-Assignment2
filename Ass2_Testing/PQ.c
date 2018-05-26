@@ -3,7 +3,9 @@
 #include <assert.h>
 
 #include "PQ.h"
+
 #define INF 0x7FFFFFFF
+
 
 typedef struct PQRep {
     struct PQNode *head;
@@ -14,6 +16,8 @@ typedef struct PQNode {
     ItemPQ item;
     struct PQNode *next;
 } PQNode;
+
+// ItemPQ newItem(int, int);
 
 /* Creates new priority queue, that can store items of type ItemPQ.
 */
@@ -33,8 +37,8 @@ void addPQ(PQ q, ItemPQ item) {
 
     PQNode *curr = q->head;
     while (curr != NULL) {
-        if (curr->item->key == item->key) {
-            curr->item->value = item->value;
+        if (curr->item.key == item.key) {
+            curr->item.value = item.value;
             return;
         }
         curr = curr->next;
@@ -43,20 +47,20 @@ void addPQ(PQ q, ItemPQ item) {
     //If an item with 'key' doesn't exists
     //we need to insert a new node
     PQNode *new = malloc(sizeof(PQNode));
-    new->key = item->key;
-    new->value = item->value;
-
+    new->item.key = item.key;
+    new->item.value = item.value;
+    new->next = NULL;
     //if the q is empty
     if (q->head == NULL) {
         q->head = q->last = new;
         return;
     }
 
-    if (q->head->key > item->key) {
+    if (q->head->item.key > item.key) {
         new->next = q->head;
         q->head = new;
         return;
-    } else if (q->last->key < item->key) {
+    } else if (q->last->item.key < item.key) {
         q->last->next = new;
         q->last = new;
         return;
@@ -64,7 +68,7 @@ void addPQ(PQ q, ItemPQ item) {
         curr = q->head;
         PQNode *prev = NULL;
         while (curr != NULL) {
-            if (curr->item->key > item->key) {
+            if (curr->item.key > item.key) {
                 prev->next = new;
                 new->next = curr;
                 break;
@@ -77,10 +81,10 @@ void addPQ(PQ q, ItemPQ item) {
 
 ItemPQ dequeuePQ(PQ q) {
     assert (q != NULL);
-    //
-    if (PQEmpty(q)) return NULL;
+    ItemPQ *result = NULL;
+    if (PQEmpty(q) == 1) return *result;
     PQNode *curr = q->head;
-
+    PQNode *tmp = NULL;
     if(q->head == q->last){
         q->head = q->last = NULL;
         return curr->item;
@@ -90,9 +94,9 @@ ItemPQ dequeuePQ(PQ q) {
         curr = q->head;
         while(curr != NULL){
             //get the smallest value and track the key
-            if(curr->item->value < smallest){
-                keyIndex = curr->item->key;
-                smallest = curr->item->value;
+            if(curr->item.value < smallest){
+                keyIndex = curr->item.key;
+                smallest = curr->item.value;
             }
             curr = curr->next;
         }
@@ -100,13 +104,13 @@ ItemPQ dequeuePQ(PQ q) {
         curr = q->head;
         while(curr != NULL){
             //remove the item
-            if(curr->item->key == keyIndex){
+            if(curr->item.key == keyIndex){
                 break;
             }
             prev = curr;
             curr = curr->next;
         }
-        PQNode * tmp = curr;
+        tmp = curr;
         if (prev == NULL) {
             q->head = curr->next;
         } else if (curr == q->last) {
@@ -117,15 +121,15 @@ ItemPQ dequeuePQ(PQ q) {
         }
         free(curr);
     }
-    return tmp;
+    return tmp->item;
 }
 
 void updatePQ(PQ q, ItemPQ item) {
     assert (q != NULL);
     PQNode *curr = q->head;
     while (curr != NULL) {
-        if (curr->item->key == item->key) {
-            curr->item->value = item->value;
+        if (curr->item.key == item.key) {
+            curr->item.value = item.value;
         }
         curr = curr->next;
     }
@@ -140,11 +144,15 @@ int PQEmpty(PQ q) {
 
 void  showPQ(PQ q) {
     PQNode *curr = q->head;
+    if(curr == NULL){
+        printf("Empty\n");
+        return;
+    }
     while(curr->next != NULL){
-        printf("%d > ", curr->item->value);
+        printf("%d > ", curr->item.value);
         curr = curr->next;
     }
-    printf("%d\n", curr->item->value);
+    printf("%d\n", curr->item.value);
 }
 
 void  freePQ(PQ q) {
@@ -152,8 +160,15 @@ void  freePQ(PQ q) {
     PQNode *tmp;
     while (curr != NULL) {
         tmp = curr->next;
-        free(curr->items);
+        //free(curr->item);
         curr = tmp;
     }
     free(q);
 }
+
+// ItemPQ *newItem(int key, int value) {
+//     ItemPQ *new = malloc(sizeof(ItemPQ));
+//     new->key = key;
+//     new->value = value;
+//     return new;
+// }

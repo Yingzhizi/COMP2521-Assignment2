@@ -22,23 +22,6 @@ g = {
     {id:'19',label:'19',x:0.285317,y:-0.092705, size:0.2, color: getColor(1.000000,gradient)}
   ],
   edges: [
-    {source:'1',target:'2',id:'0',label:'1',type: 'curvedArrow'},
-    {source:'2',target:'1',id:'1',label:'10',type: 'curvedArrow'},
-    {source:'4',target:'2',id:'2',label:'60',type: 'curvedArrow'},
-    {source:'5',target:'2',id:'3',label:'6',type: 'curvedArrow'},
-    {source:'6',target:'1',id:'4',label:'100',type: 'curvedArrow'},
-    {source:'7',target:'2',id:'5',label:'24',type: 'curvedArrow'},
-    {source:'8',target:'2',id:'6',label:'54',type: 'curvedArrow'},
-    {source:'9',target:'2',id:'7',label:'86',type: 'curvedArrow'},
-    {source:'10',target:'3',id:'8',label:'39',type: 'curvedArrow'},
-    {source:'11',target:'10',id:'9',label:'324',type: 'curvedArrow'},
-    {source:'12',target:'14',id:'10',label:'12',type: 'curvedArrow'},
-    {source:'13',target:'19',id:'11',label:'13',type: 'curvedArrow'},
-    {source:'14',target:'17',id:'12',label:'1',type: 'curvedArrow'},
-    {source:'15',target:'15',id:'13',label:'6',type: 'curvedArrow'},
-    {source:'16',target:'16',id:'14',label:'99',type: 'curvedArrow'},
-    {source:'17',target:'15',id:'15',label:'4',type: 'curvedArrow'},
-    {source:'18',target:'16',id:'16',label:'5',type: 'curvedArrow'},
-    {source:'19',target:'2',id:'17',label:'7',type: 'curvedArrow'}
+
   ]
 }

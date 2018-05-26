@@ -29,7 +29,24 @@ int main(){
   insertEdge(g,17, 15,4);
   insertEdge(g,18,16,5);
   insertEdge(g,19,2,7);
-
+  removeEdge(g,1,2);
+  removeEdge(g,2,1);
+  removeEdge(g,4,2);
+  removeEdge(g,5,2);
+  removeEdge(g,6,1);
+  removeEdge(g,7,2);
+  removeEdge(g,8,2);
+  removeEdge(g,9,2);
+  removeEdge(g,10,3);
+  removeEdge(g,11,10);
+  removeEdge(g,12,14);
+  removeEdge(g,13,19);
+  removeEdge(g,14,17);
+  removeEdge(g,15,15);
+  removeEdge(g,16,16);
+  removeEdge(g,17, 15);
+  removeEdge(g,18,16);
+  removeEdge(g,19,2);
 
   showGraph(g);
 

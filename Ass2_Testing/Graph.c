@@ -74,9 +74,8 @@ void insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
 
         //insert to in-incident
         //g->inedges[dest] = insertLL(g->inedges[dest], src);
-        //puts("EEEEEEEEEEE\n");
+        g->nE++;
     }
-    g->nE++;
 }
 //wo ai ni
 void  removeEdge(Graph g, Vertex src, Vertex dest) {
@@ -85,8 +84,8 @@ void  removeEdge(Graph g, Vertex src, Vertex dest) {
         //printf("BBBBBBBBBBB\n");
 
         g->edges[src] = deleteLL(g->edges[src], dest);
+        g->nE--;
     }
-    g->nE--;
 }
 
 bool  adjacent(Graph g, Vertex src, Vertex dest) {
