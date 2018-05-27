@@ -48,30 +48,49 @@ ShortestPaths dijkstra(Graph g, Vertex source) {
 	sp->pred = malloc(g->nV * sizeof(PredNode *));
 	assert(sp->pred != NULL);
 
-    for (int i = 0; i < g->nV; i++) {
-        sp->dist[i] = INF;
-        sp->pred[i] = NULL;
-        // seen[i] = 0;
-		ItemPQ *new = malloc(sizeof(ItemPQ));
-		new->key = g->edges[i]->w;
-		new->value = g->edges[i]->weight;
-        addPQ(vertexSet, *new);
-    }
+    // for (int i = 0; i < g->nV; i++) {
+    //     sp->dist[i] = INF;
+    //     sp->pred[i] = NULL;
+    //     // seen[i] = 0;
+	// 	ItemPQ *new = malloc(sizeof(ItemPQ));
+	// 	new->key = g->edges[i]->w;
+	// 	new->value = g->edges[i]->weight;
+    //     addPQ(vertexSet, *new);
+    // }
+	//
+    // sp->dist[source] = 0;
 
-    sp->dist[source] = 0;
+	sp->dist[source] = 0;
+
+	for (int i = 0; i < g->nV; i++) {
+		if (i != source) {
+			sp->dist[i] = INF;
+		}
+	    sp->pred[i] = NULL;
+		ItemPQ *new = malloc(sizeof(ItemPQ));
+		new->key = i;
+		new->value = sp->dist[i];
+	    addPQ(vertexSet, *new);
+    }
 
     while(!PQEmpty(vertexSet)){
         ItemPQ curr = dequeuePQ(vertexSet);
-        Vertex v;
-        for (v = 0; v < g->nV; v++){
-            if (adjacent(g, curr.key, v)) {
-                if (sp->dist[curr.key] + g->edges[curr.key]->weight < sp->dist[v]) {
-                    sp->dist[v] = sp->dist[curr.key] + g->edges[curr.key]->weight;
+        Vertex x;
+        for (x = 0; x < g->nV; x++){
+            if (adjacent(g, curr.key, x)) {
+                if (sp->dist[curr.key] + g->edges[curr.key]->weight < sp->dist[x]) {
+                    sp->dist[x] = sp->dist[curr.key] + g->edges[curr.key]->weight;
 					PredNode *p = malloc(sizeof(PredNode));
 					p->v = curr.key;
-					p->next =
-                    sp->pred[v]->v = curr.key;
-					sp->pred[v]->next =
+                    p->next = NULL;
+                    //prev[v] ← u
+                    sp->pred[x] = p;
+					//sp->pred[x]->next = NULL;
+                    //Q.decrease_priority(v, alt)
+                    ItemPQ *update = malloc(sizeof(ItemPQ));
+            		update->key = x;
+            		update->value = sp->dist[x];
+                    updatePQ(vertexSet, *update);
                 }
             }
             //find shortest distance
