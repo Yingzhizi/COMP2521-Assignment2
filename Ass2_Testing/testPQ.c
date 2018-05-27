@@ -10,19 +10,19 @@ int main(){
     new->value = 9;
 
     addPQ(g, *new);
-    new->key = 9;
+    new->key = 1;
     new->value = 19;
     addPQ(g, *new);
 
-    new->key = 8;
+    new->key = 1;
     new->value = 10;
     addPQ(g, *new);
 
-    new->key = 10;
+    new->key = 1;
     new->value = 18;
     addPQ(g, *new);
 
-    new->key = 1;
+    new->key = 12;
     new->value = 1;
     addPQ(g, *new);
 
@@ -30,8 +30,8 @@ int main(){
     dequeuePQ(g);
     dequeuePQ(g);
     dequeuePQ(g);
-    dequeuePQ(g);
-    dequeuePQ(g);
+    // dequeuePQ(g);
+    //dequeuePQ(g);
     // addPQ(g,12);
     // addPQ(g,4);
     // addPQ(g,8);
