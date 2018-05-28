@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "PQ.h"
+#include "Graph.h"
 
 #define INF 0x7FFFFFFF
 
