@@ -1,107 +1,107 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+// Dijkstra ADT interface for Ass2 (COMP2521)
 #include "Dijkstra.h"
 #include "PQ.h"
-#include "PQ.c"
-#include "Graph.c"
+//#include "Graph.c"
+#include <stdlib.h>
+#include <assert.h>
+#include <stdio.h>
+
 #define INF 0x7FFFFFFF
 
-// function Dijkstra(Graph, source):
-// 2      dist[source] ← 0                                    // Initialization
-// 3
-// 4      create vertex set Q
-// 5
-// 6      for each vertex v in Graph:
-// 7          if v ≠ source
-// 8              dist[v] ← INFINITY                          // Unknown distance from source to v
-// 9          prev[v] ← UNDEFINED                         // Predecessor of v
-// 10
-// 11         Q.add_with_priority(v, dist[v])
-// 12
-// 13
-// 14     while Q is not empty:                              // The main loop
-// 15         u ← Q.extract_min()                            // Remove and return best vertex
-// 16         for each neighbor v of u:                      // only v that is still in Q
-// 17             alt ← dist[u] + length(u, v)
-// 18             if alt < dist[v]
-// 19                 dist[v] ← alt
-// 20                 prev[v] ← u
-// 21                 Q.decrease_priority(v, alt)
-// 22
-// 23     return dist, prev
+void set_pred(ShortestPaths, Vertex, Vertex, Vertex);
+void set_equal_pred(ShortestPaths,Vertex, Vertex, Vertex);
 
 ShortestPaths dijkstra(Graph g, Vertex source) {
-    assert (g != NULL);
+assert (g != NULL);
 
+    int nV = numVerticies(g);
     //adjListNode *vertexSet = {};
-    PQ vertexSet = newPQ();
-    // int seen[g->nV];
-    ShortestPaths *sp = malloc(sizeof(struct ShortestPaths));
-    assert (sp != NULL);
-    sp->src = source;
-    sp->noNodes = g->nV;
 
-	sp->dist = malloc(g->nV * sizeof(int));
-	assert(sp->dist != NULL);
+    //int seen[g->nV];
+    ShortestPaths sp;
+    sp.src = source;
+    sp.noNodes = nV;
+    sp.dist = malloc(nV *sizeof(int));
+    assert(sp.dist != NULL);
+    // sp->src = source;
 
-	sp->pred = malloc(g->nV * sizeof(PredNode *));
-	assert(sp->pred != NULL);
+	sp.pred = malloc(nV * sizeof(PredNode *));
+	assert(sp.pred != NULL);
 
-    // for (int i = 0; i < g->nV; i++) {
-    //     sp->dist[i] = INF;
-    //     sp->pred[i] = NULL;
-    //     // seen[i] = 0;
-	// 	ItemPQ *new = malloc(sizeof(ItemPQ));
-	// 	new->key = g->edges[i]->w;
-	// 	new->value = g->edges[i]->weight;
-    //     addPQ(vertexSet, *new);
-    // }
-	//
-    // sp->dist[source] = 0;
+    int seen[nV];
 
-	sp->dist[source] = 0;
-
-	for (int i = 0; i < g->nV; i++) {
-		if (i != source) {
-			sp->dist[i] = INF;
-		}
-	    sp->pred[i] = NULL;
-		ItemPQ *new = malloc(sizeof(ItemPQ));
-		new->key = i;
-		new->value = sp->dist[i];
-	    addPQ(vertexSet, *new);
+    for (int i = 0; i < nV; i++) {
+        sp.dist[i] = INF;
+        sp.pred[i] = NULL;
+        seen[i] = -1;
+        // seen[i] = 0;
+		// ItemPQ *new = malloc(sizeof(ItemPQ));
+		// new->key = edge->w;
+		// new->value = edge->weight;
+  //       addPQ(vertexSet, *new);
     }
+    sp.dist[source] = 0;
+
+    PQ vertexSet = newPQ();
+
+    ItemPQ new;
+    new.key = source;
+    new.value = sp.dist[source];
+
+    addPQ(vertexSet, new);
 
     while(!PQEmpty(vertexSet)){
         ItemPQ curr = dequeuePQ(vertexSet);
-        Vertex x;
-        for (x = 0; x < g->nV; x++){
-            if (adjacent(g, curr.key, x)) {
-                if (sp->dist[curr.key] + g->edges[curr.key]->weight < sp->dist[x]) {
-                    sp->dist[x] = sp->dist[curr.key] + g->edges[curr.key]->weight;
-					PredNode *p = malloc(sizeof(PredNode));
-					p->v = curr.key;
-                    p->next = NULL;
-                    //prev[v] ← u
-                    sp->pred[x] = p;
-					//sp->pred[x]->next = NULL;
-                    //Q.decrease_priority(v, alt)
-                    ItemPQ *update = malloc(sizeof(ItemPQ));
-            		update->key = x;
-            		update->value = sp->dist[x];
-                    updatePQ(vertexSet, *update);
+        
+        if(seen[curr.key] != -1) continue;
+        seen[curr.key] = 1;
+        AdjList edge = outIncident(g, curr.key);
+        while(edge != NULL){
+            if(sp.dist[curr.key] + edge->weight <= sp.dist[edge->w]){
+                if(sp.dist[curr.key] + edge->weight == sp.dist[edge->w]){
+                    sp.dist[edge->w] = sp.dist[curr.key] + edge->weight;
+                    set_equal_pred(sp, edge->w, curr.key, source);
+                } else {
+                    sp.dist[edge->w] = sp.dist[curr.key] + edge->weight;
+                    set_pred(sp, edge->w, curr.key, source);
                 }
+                new.key = edge->w;
+                new.value = edge->weight;
+                addPQ(vertexSet, new);
             }
-            //find shortest distance
-            //update that index that index as the next node
-            //push it into queue and start again
+            edge = edge->next;
         }
     }
-    return *sp;
+
+    for(int i = 0; i < nV; i++){
+        if(sp.dist[i] == INF){
+            sp.dist[i] = 0;
+        }
+    }
+    return sp;
+    
+}
+//sets pred node
+void set_pred(ShortestPaths path,Vertex w, Vertex v, Vertex src){
+  path.pred[w] = malloc(sizeof(PredNode));
+  path.pred[w]->v = v;
+  path.pred[w]->next = NULL;
 }
 
-void  showShortestPaths(ShortestPaths sp) {
+//function to see if a string of paths is better than another path which may be direct
+void set_equal_pred(ShortestPaths path,Vertex w, Vertex v, Vertex src){
+  PredNode * new = malloc(sizeof(PredNode));
+  new->v = v;
+  new->next = NULL;
+  PredNode * curr = path.pred[w];
+  while(path.pred[w]->next!=NULL){
+    path.pred[w] = path.pred[w]->next;
+  }
+  path.pred[w]->next = new;
+  path.pred[w] = curr;
+}
+
+void showShortestPaths(ShortestPaths sp) {
     int i = sp.src;
     //print the dist
     while(i < sp.noNodes){
@@ -116,11 +116,9 @@ void  showShortestPaths(ShortestPaths sp) {
     }
 }
 
+
 void  freeShortestPaths(ShortestPaths sp) {
 
-    for (int i = 0; i < sp.noNodes; i++) {
-        //free(sp.dist[i]);
-        free(sp.pred[i]);
-    }
-    // free(sp);
+    free(sp.pred);
+    free(sp.dist);
 }
