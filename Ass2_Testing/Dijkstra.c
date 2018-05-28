@@ -1,7 +1,7 @@
 // Dijkstra ADT interface for Ass2 (COMP2521)
 #include "Dijkstra.h"
 #include "PQ.h"
-//#include "Graph.c"
+#include "Graph.c"
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
@@ -52,7 +52,7 @@ assert (g != NULL);
 
     while(!PQEmpty(vertexSet)){
         ItemPQ curr = dequeuePQ(vertexSet);
-        
+
         if(seen[curr.key] != -1) continue;
         seen[curr.key] = 1;
         AdjList edge = outIncident(g, curr.key);
@@ -73,13 +73,31 @@ assert (g != NULL);
         }
     }
 
-    for(int i = 0; i < nV; i++){
-        if(sp.dist[i] == INF){
+
+    // int count = 0;
+    // //if we found that a node is isolated, we need to get rid of this from the shortest path
+    // int i;
+    // for(i = 0; i < nV; i++){
+    //     if(sp.dist[i] == INF && sp.pred[sp.dist[i].w] == NULL && i != nV - 1){
+    //         sp.dist[i] = 0;
+    //         count++;
+    //     }
+    // }
+    // if (sp.dist[i] == INF) {
+    //     sp.dist[i] = 0;
+    // }
+    // sp.noNodes = nV - count;
+
+    int i;
+    for(i = 0; i < nV; i++){
+        if(sp.dist[i] == INF && sp.pred[sp.dist[i].w] == NULL && i != nV - 1){
             sp.dist[i] = 0;
+            count++;
         }
     }
+
     return sp;
-    
+
 }
 //sets pred node
 void set_pred(ShortestPaths path,Vertex w, Vertex v, Vertex src){
@@ -122,3 +140,29 @@ void  freeShortestPaths(ShortestPaths sp) {
     free(sp.pred);
     free(sp.dist);
 }
+
+// int countIsolated(Graph g) {
+//     int nV = numVerticies(g);
+//
+//     int buff[nV];
+//     for(int i = 0; i < nV; i++) {
+//         buff[i] = 0;
+//     }
+//
+//     for (int i = 0; i < nV; i++) {
+//         AdjList curr = g->edges[i];
+//         while (curr != NULL) {
+//             buff[curr->w] = 1;
+//             curr = curr->next;
+//         }
+//     }
+//
+//     int count = 0;
+//     for (int i = 0; i < nV; i++) {
+//         if (buff[i] == 0) {
+//             count++;
+//         }
+//     }
+//
+//     return count;
+// }
