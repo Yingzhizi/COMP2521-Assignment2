@@ -165,28 +165,8 @@ AdjList outIncident(Graph g, Vertex v) {
     return g->edges[v];
 }
 
-/**
-  * Returns the amount of nodes in an outgoing edge
-  * array from a given vertex. Used for CentralityMeasures.
-  *
-  */
-// int countOut(Graph g, Vertex v) {
-//
-//     assert(g != NULL && validV(g, v));
-//     return count(g->edges[v]);
-// }
 
-/**
-  * Returns the amount of ndoes in an ingoing edge array
-  * from a given vertex. Used for CnetralityMeasures.
-  *
-  */
 
-// int countIn(Graph g, Vertex v) {
-//
-//     assert(g != NULL && validV(g, v));
-//     return count(g->inedges[v]);
-// }
 
 /**
   * Need to fix this function before commenting on it.
@@ -347,23 +327,6 @@ bool inLL(AdjList L, int n) {
     return inLL(L->next, n);
 }
 
-/**
-  * This helps us to count the number of nodes within the edges arrays.
-  * Used to count the outgoing edges and incoming edges. Used in CentralityMeasures.
-  *
-  */
-// int count(AdjList L) {
-//
-//     int c = 0;
-//
-//     //counts number of nodes in edge list.
-//     while (L != NULL) {
-//         c++;
-//         L = L->next;
-//     }
-//
-//     return c;
-// }
 
 /**
   * Displays the destination nodes in linked to a source node.
