@@ -32,8 +32,18 @@ double countOutW(Graph g, Vertex v){
     //ShortestPaths *sp = malloc(sizeof(ShortestPaths));
     //assert(sp != NULL);
     //getting shortest path
+
     ShortestPaths sp = dijkstra(g, v);
+
     //weight will change depending on where we are
+
+    //get all closeness noNode
+    // AdjList out = outIncident(g, v);
+    // while (out != NULL) {
+    //     totalWeight += out->weight;
+    //     out = out->next;
+    // }
+
     for(int j = 0; j < sp.noNodes; j++){
         totalWeight += sp.dist[j];
     }
