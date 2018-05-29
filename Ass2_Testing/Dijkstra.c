@@ -1,7 +1,8 @@
+
 // Dijkstra ADT interface for Ass2 (COMP2521)
 #include "Dijkstra.h"
 #include "PQ.h"
-#include "Graph.c"
+//#include "Graph.c"
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
@@ -14,23 +15,23 @@ void set_equal_pred(ShortestPaths,Vertex, Vertex, Vertex);
 ShortestPaths dijkstra(Graph g, Vertex source) {
 assert (g != NULL);
 
-    int nV = numVerticies(g);
+    //int nV = numVerticies(g);
     //adjListNode *vertexSet = {};
 
     //int seen[g->nV];
     ShortestPaths sp;
     sp.src = source;
-    sp.noNodes = nV;
-    sp.dist = malloc(nV *sizeof(int));
+    sp.noNodes = numVerticies(g);
+    sp.dist = malloc(numVerticies(g) *sizeof(int));
     assert(sp.dist != NULL);
     // sp->src = source;
 
-	sp.pred = malloc(nV * sizeof(PredNode *));
+	sp.pred = malloc(numVerticies(g) * sizeof(PredNode *));
 	assert(sp.pred != NULL);
 
-    int seen[nV];
+    int seen[numVerticies(g)];
 
-    for (int i = 0; i < nV; i++) {
+    for (int i = 0; i < numVerticies(g); i++) {
         sp.dist[i] = INF;
         sp.pred[i] = NULL;
         seen[i] = -1;
@@ -50,11 +51,12 @@ assert (g != NULL);
 
     addPQ(vertexSet, new);
 
-    while(!PQEmpty(vertexSet)){
+    while(PQEmpty(vertexSet) != 1){
+    	//showPQ(vertexSet);
         ItemPQ curr = dequeuePQ(vertexSet);
-
         if(seen[curr.key] != -1) continue;
         seen[curr.key] = 1;
+    
         AdjList edge = outIncident(g, curr.key);
         while(edge != NULL){
             if(sp.dist[curr.key] + edge->weight <= sp.dist[edge->w]){
@@ -73,31 +75,13 @@ assert (g != NULL);
         }
     }
 
-
-    // int count = 0;
-    // //if we found that a node is isolated, we need to get rid of this from the shortest path
-    // int i;
-    // for(i = 0; i < nV; i++){
-    //     if(sp.dist[i] == INF && sp.pred[sp.dist[i].w] == NULL && i != nV - 1){
-    //         sp.dist[i] = 0;
-    //         count++;
-    //     }
-    // }
-    // if (sp.dist[i] == INF) {
-    //     sp.dist[i] = 0;
-    // }
-    // sp.noNodes = nV - count;
-
-    int i;
-    for(i = 0; i < nV; i++){
-        if(sp.dist[i] == INF && sp.pred[sp.dist[i].w] == NULL && i != nV - 1){
+    for(int i = 0; i < numVerticies(g); i++){
+        if(sp.dist[i] == INF){
             sp.dist[i] = 0;
-            count++;
         }
     }
-
     return sp;
-
+    
 }
 //sets pred node
 void set_pred(ShortestPaths path,Vertex w, Vertex v, Vertex src){
@@ -120,6 +104,7 @@ void set_equal_pred(ShortestPaths path,Vertex w, Vertex v, Vertex src){
 }
 
 void showShortestPaths(ShortestPaths sp) {
+    
     int i = sp.src;
     //print the dist
     while(i < sp.noNodes){
@@ -132,6 +117,7 @@ void showShortestPaths(ShortestPaths sp) {
         printf("%d ", curr->v);
         curr = curr->next;
     }
+    
 }
 
 
@@ -140,29 +126,3 @@ void  freeShortestPaths(ShortestPaths sp) {
     free(sp.pred);
     free(sp.dist);
 }
-
-// int countIsolated(Graph g) {
-//     int nV = numVerticies(g);
-//
-//     int buff[nV];
-//     for(int i = 0; i < nV; i++) {
-//         buff[i] = 0;
-//     }
-//
-//     for (int i = 0; i < nV; i++) {
-//         AdjList curr = g->edges[i];
-//         while (curr != NULL) {
-//             buff[curr->w] = 1;
-//             curr = curr->next;
-//         }
-//     }
-//
-//     int count = 0;
-//     for (int i = 0; i < nV; i++) {
-//         if (buff[i] == 0) {
-//             count++;
-//         }
-//     }
-//
-//     return count;
-// }

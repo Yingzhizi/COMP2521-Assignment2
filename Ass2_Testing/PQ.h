@@ -22,7 +22,6 @@ void  addPQ(PQ, ItemPQ);
 
 /* Removes and returns the item (ItemPQ) with smallest 'value'.
    For items with equal 'value', observes FIFO.
-   Returns null if this queue is empty.
 */
 ItemPQ  dequeuePQ(PQ);
 

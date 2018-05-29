@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "PQ.h"
+#include "Graph.h"
 
-#define INF 0x7FFFFFFF
+#define INF 200000000
 
 
 //Using a priority queue in form a linked list.
@@ -29,7 +30,7 @@ PQ newPQ() {
 
     //creates a new empty priority queue and makes sure
     //it is valid
-    PQRep *new = malloc(sizeof(PQRep));
+    PQRep *new = malloc(sizeof(PQRep *));
     assert (new != NULL);
 
     //initialise the head and last of a new priority queue
@@ -68,7 +69,7 @@ void addPQ(PQ q, ItemPQ item) {
 
     //make a new node to insert into priority queue and make sure
     //it is valid
-    PQNode *new = malloc(sizeof(PQNode));
+    PQNode *new = malloc(sizeof(PQNode *));
     assert(new != NULL);
 
     //initialise the node with the right key and value.
@@ -82,18 +83,24 @@ void addPQ(PQ q, ItemPQ item) {
         //It becomes the only item in the queue
         q->head = q->last = new;
         return;
+    } else {
+        q->last->next = new;
+        new->next = NULL;
+        q->last = new;
     }
-
+/*
     //adding to front of the priority queue
     if (q->head->item.key > item.key) {
         new->next = q->head;
         q->head = new;
+        new = q->head->next;
         return;
 
     //adding to the back of the priority queue
     } else if (q->last->item.key < item.key) {
         q->last->next = new;
         q->last = new;
+        new->next = NULL;
         return;
 
     //adding to the middle of the priority queue
@@ -110,7 +117,9 @@ void addPQ(PQ q, ItemPQ item) {
             curr = curr->next;
         }
     }
-
+    //printf("key->value: %d\n", new->item.value);
+    //printf("key->key: %d\n", new->item.key);
+*/
 }
 
 /**
@@ -125,12 +134,12 @@ ItemPQ dequeuePQ(PQ q) {
 
     //since ItemPQ can't be NULL, assert to make sure
     //it isn't NULL
-    assert (PQEmpty(q) != 1);
+    //assert (PQEmpty(q) != 1);
 
     //make PQNode temporary pointers one for traversing the
     //priority queue and one used to remove the node
     PQNode *curr = q->head;
-    PQNode *tmp = NULL;
+    PQNode *tmp;
 
     //removing the only item in the priority queue
     if(q->head == q->last){
@@ -141,10 +150,10 @@ ItemPQ dequeuePQ(PQ q) {
     //if PQ size is > 1
     } else {
 
-        //these are used to keep track of smallest value and 
+        //these are used to keep track of smallest value and
         //it's key
         int smallest = INF;
-        int keyIndex;
+        int keyIndex = INF;
 
         curr = q->head;
 
@@ -183,19 +192,23 @@ ItemPQ dequeuePQ(PQ q) {
         if (prev == NULL) {
             //update the pointers
             q->head = curr->next;
+            curr = NULL;
 
         //item being removed is at last
         } else if (curr == q->last) {
             //update the pointers
             q->last = prev;
             prev->next = NULL;
+            curr = NULL;
 
         //item being removed is somewhere in the middle
+
         } else {
             prev->next = curr->next;
+            curr = curr->next;
         }
         //avoid memory leaks
-        free(curr);
+        //free(curr);
     }
 
     return tmp->item;
@@ -220,6 +233,7 @@ void updatePQ(PQ q, ItemPQ item) {
         //if key doesn't exist we dont do anything
         if (curr->item.key == item.key) {
             curr->item.value = item.value;
+            break;
         }
         //move to the next item in the priority queue
         curr = curr->next;
@@ -257,11 +271,10 @@ void  showPQ(PQ q) {
     PQNode *curr = q->head;
 
     //print out the values of the priority queue
-    while(curr->next != NULL){
-        printf("%d > ", curr->item.value);
+    while(curr != NULL){
+        printf("K: %d, V: %d > ", curr->item.key, curr->item.value);
         curr = curr->next;
     }
-    printf("%d\n", curr->item.value);
 }
 
 /**

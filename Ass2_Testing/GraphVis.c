@@ -1,5 +1,5 @@
 /*
- * Graph Visulaiser
+ * Graph Visualiser
  * Written By Zain Afzal for cs2521 2018 s1
  *
  * Creates a JSON rep of a graph for use
@@ -91,5 +91,7 @@ void graphVis(Graph g, int mode) {
   fprintf(f, "\n  ]\n}");
   char cwd[1024];
   char * res = getcwd(cwd, 1024);
+	free(nodes.values);
+	fclose(f);
   printf("See Graph: file://%s/graphVisFiles/seeGraph.html\n",res);
 }

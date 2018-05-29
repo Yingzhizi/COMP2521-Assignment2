@@ -13,7 +13,7 @@ typedef struct NodeValues {
 
 NodeValues outDegreeCentrality(Graph);
 NodeValues inDegreeCentrality(Graph);
-NodeValues degreeCentrality(Graph); // for undirected graph
+NodeValues degreeCentrality(Graph);
 
 NodeValues closenessCentrality(Graph);
 

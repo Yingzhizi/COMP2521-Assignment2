@@ -65,6 +65,7 @@ Graph newGraph(int noNodes) {
   * This is used to check whether the vertex is valid or not
   *
   */
+
 int validV(Graph g, Vertex v) {
 
     return (g != NULL && v < g->nV && v >= 0);
@@ -157,7 +158,9 @@ int  numVerticies(Graph g) {
 AdjList outIncident(Graph g, Vertex v) {
 
     assert(g != NULL && validV(g, v));
-    return (g->edges[v]);
+   //AdjList L = g->edges[v];
+
+    return g->edges[v];
 }
 
 /**
