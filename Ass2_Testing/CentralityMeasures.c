@@ -99,7 +99,7 @@ NodeValues closenessCentrality(Graph g) {
     for (v = 0; v < numVerticies(g); v++){
         // weight = countOutW(g, v);
         // noOutEdges = countOut(g, v);
-        new->values[v] = countOut(g, v) / countOutW(g, v);
+        new->values[v] = (numVerticies(g) - 1) / countOutW(g, v);
     }
     return *new;
 }
@@ -118,7 +118,7 @@ NodeValues betweennessCentralityNormalised(Graph g) {
 void  showNodeValues(NodeValues v) {
     int i = 0;
     while(i < v.noNodes){
-        printf("%lf ", v.values[i]);
+        printf("%d: %lf\n", i, v.values[i]);
         i++;
     }
 }
