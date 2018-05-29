@@ -13,7 +13,7 @@ void set_pred(ShortestPaths, Vertex, Vertex, Vertex);
 void set_equal_pred(ShortestPaths,Vertex, Vertex, Vertex);
 
 ShortestPaths dijkstra(Graph g, Vertex source) {
-assert (g != NULL);
+    assert (g != NULL);
 
     //int nV = numVerticies(g);
     //adjListNode *vertexSet = {};
@@ -56,7 +56,7 @@ assert (g != NULL);
         ItemPQ curr = dequeuePQ(vertexSet);
         if(seen[curr.key] != -1) continue;
         seen[curr.key] = 1;
-    
+
         AdjList edge = outIncident(g, curr.key);
         while(edge != NULL){
             if(sp.dist[curr.key] + edge->weight <= sp.dist[edge->w]){
@@ -81,7 +81,7 @@ assert (g != NULL);
         }
     }
     return sp;
-    
+
 }
 //sets pred node
 void set_pred(ShortestPaths path,Vertex w, Vertex v, Vertex src){
@@ -104,7 +104,7 @@ void set_equal_pred(ShortestPaths path,Vertex w, Vertex v, Vertex src){
 }
 
 void showShortestPaths(ShortestPaths sp) {
-    
+
     int i = sp.src;
     //print the dist
     while(i < sp.noNodes){
@@ -117,7 +117,7 @@ void showShortestPaths(ShortestPaths sp) {
         printf("%d ", curr->v);
         curr = curr->next;
     }
-    
+
 }
 
 

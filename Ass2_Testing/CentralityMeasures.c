@@ -125,8 +125,6 @@ NodeValues closenessCentrality(Graph g) {
     new->noNodes = numVerticies(g);
     new->values = calloc(numVerticies(g), sizeof(double));
     assert(new->values != NULL);
-    ShortestPaths *sp = malloc(sizeof(struct ShortestPaths));
-    assert(sp != NULL);
     Vertex v;
     double nodereach;
     double nodetotal;
@@ -143,28 +141,43 @@ NodeValues closenessCentrality(Graph g) {
 }
 
 //count how many path exists in graph start from src to dest
-int countPath(Vertex src, Vertex dest) {
-
+//sigma s_t
+int countPath(Graph g, Vertex src, Vertex dest) {
+    //checkValid g and src and dest
+    ShortestPaths sp = dijkstra(g, src);
+    int count = 0;
+    PredNode *curr;
+    if (sp.dist[dest] != 0 && sp.pred[dest] != NULL) {
+        curr = sp.pred[dest];
+        while(curr != NULL) {
+            count++;
+            curr = curr->next;
+        }
+    }
+    return count;
 }
 
-int inPath(Vertex src, Vertex dest) {
-    //return 1 if in
-    //return 0 if not
-}
+//count how many path exist in graph start from src to dest invlove 'v'
+//sigma s_t (v)
+
+// int inPath(Vertex src, Vertex dest) {
+//     //return 1 if in
+//     //return 0 if not
+// }
 
 NodeValues betweennessCentrality(Graph g) {
     //one sympathy mark please
-    assert(g != NULL);
-    NodeValues *new = malloc(sizeof(NodeValues));
-    assert(new != NULL);
-    new->noNodes = numVerticies(g);
-    new->values = calloc(numVerticies(g), sizeof(double));
-    assert(new->values != NULL);
-    for (v = 0; v < numVerticies(g); v++){
-
-        new->values[v] = (nodereach * (reachable(g, v) - 1)) / ((numVerticies(g) - 1) * countOutW(g, v));
-
-    }
+    // assert(g != NULL);
+    // NodeValues *new = malloc(sizeof(NodeValues));
+    // assert(new != NULL);
+    // new->noNodes = numVerticies(g);
+    // new->values = calloc(numVerticies(g), sizeof(double));
+    // assert(new->values != NULL);
+    // for (v = 0; v < numVerticies(g); v++){
+    //
+    //     new->values[v] = (nodereach * (reachable(g, v) - 1)) / ((numVerticies(g) - 1) * countOutW(g, v));
+    //
+    // }
 
     NodeValues throwAway = {0};
     return throwAway;

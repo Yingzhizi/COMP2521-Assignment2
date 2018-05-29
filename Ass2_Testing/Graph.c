@@ -3,7 +3,8 @@
 #include <assert.h>
 #include <stdbool.h>
 #include "Graph.h"
-
+#include "Dijkstra.h"
+#include "CentralityMeasures.c"
 typedef struct GraphRep {
     int nV;  //number of vertices in the graph
     int nE;  //number of edges in the graph
@@ -222,6 +223,13 @@ void showGraph(Graph g) {
         printf("%d - ", i);
         //displays all nodes that forms edges towards the source node
         showLL(g->edges[i]);
+    }
+
+    for (i = 0; i < g->nV; i++) {
+        int j;
+        for (j = 0; j < g->nV; j++) {
+            printf("%d -> %d: %dpath\n", i, j, countPath(g, i, j));
+        }
     }
 }
 
