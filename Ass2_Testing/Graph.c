@@ -13,9 +13,11 @@ typedef struct GraphRep {
 
 
 //global functions declaration
-double countOutW(Graph, Vertex);
-int countOut(Graph, Vertex);
-int count(AdjList);
+
+// double countOutW(Graph, Vertex);
+// int countOut(Graph, Vertex);
+// int count(AdjList);
+
 AdjList insertLL(AdjList, int);
 AdjList deleteLL(AdjList, int);
 bool inLL(AdjList, int);
@@ -84,11 +86,11 @@ void insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     //Checks to see if the edge exists if it doesn't
     //make an edge and give it a weight. (outgoing edges)
     if (!inLL(g->edges[src], dest)){
-        
+
         g->edges[src] = insertLL(g->edges[src], dest);
         g->edges[src]->weight = weight;
 
-        //Increment the number of edges 
+        //Increment the number of edges
         g->nE++;
     }
 
@@ -168,22 +170,23 @@ AdjList outIncident(Graph g, Vertex v) {
   * array from a given vertex. Used for CentralityMeasures.
   *
   */
-int countOut(Graph g, Vertex v) {
-
-    assert(g != NULL && validV(g, v));
-    return count(g->edges[v]);
-}
+// int countOut(Graph g, Vertex v) {
+//
+//     assert(g != NULL && validV(g, v));
+//     return count(g->edges[v]);
+// }
 
 /**
   * Returns the amount of ndoes in an ingoing edge array
   * from a given vertex. Used for CnetralityMeasures.
   *
   */
-int countIn(Graph g, Vertex v) {
 
-    assert(g != NULL && validV(g, v));
-    return count(g->inedges[v]);
-}
+// int countIn(Graph g, Vertex v) {
+//
+//     assert(g != NULL && validV(g, v));
+//     return count(g->inedges[v]);
+// }
 
 /**
   * Need to fix this function before commenting on it.
@@ -205,7 +208,7 @@ int countIn(Graph g, Vertex v) {
 // }
 
 /**
-  * Returns a list of vertices on incoming edges 
+  * Returns a list of vertices on incoming edges
   * from a given vertex.
   *
   */
@@ -231,7 +234,7 @@ void showGraph(Graph g) {
     //shows number of vertices and edges
     printf("Number of vertices: %d\n", g->nV);
     printf("Number of edges: %d\n", g->nE);
-    
+
     //displays the edges within the graph
     int i;
     for (i = 0; i < g->nV; i++) {
@@ -349,18 +352,18 @@ bool inLL(AdjList L, int n) {
   * Used to count the outgoing edges and incoming edges. Used in CentralityMeasures.
   *
   */
-int count(AdjList L) {
-
-    int c = 0;
-
-    //counts number of nodes in edge list.
-    while (L != NULL) {
-        c++;
-        L = L->next;
-    }
-
-    return c;
-}
+// int count(AdjList L) {
+//
+//     int c = 0;
+//
+//     //counts number of nodes in edge list.
+//     while (L != NULL) {
+//         c++;
+//         L = L->next;
+//     }
+//
+//     return c;
+// }
 
 /**
   * Displays the destination nodes in linked to a source node.

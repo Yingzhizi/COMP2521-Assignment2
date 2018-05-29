@@ -10,9 +10,10 @@ int count(AdjList L) {
     int c = 0;
 
     //counts number of nodes in edge list.
-    while (L != NULL) {
+    adjListNode *curr = L;
+    while (curr != NULL) {
         c++;
-        L = L->next;
+        curr = curr->next;
     }
 
     return c;
@@ -24,6 +25,20 @@ int countOut(Graph g, Vertex v) {
 
 int countIn(Graph g, Vertex v) {
     return count(inIncident(g, v));
+}
+
+double countOutW(Graph g, Vertex v){
+    double totalWeight = 0;
+    //ShortestPaths *sp = malloc(sizeof(ShortestPaths));
+    //assert(sp != NULL);
+    //getting shortest path
+    ShortestPaths sp = dijkstra(g, v);
+    //weight will change depending on where we are
+    for(int j = 0; j < sp.noNodes; j++){
+        totalWeight += sp.dist[j];
+    }
+
+    return totalWeight;
 }
 
 
@@ -46,11 +61,11 @@ NodeValues inDegreeCentrality(Graph g) {
     assert(g != NULL);
     NodeValues *new = malloc(sizeof(NodeValues));
     assert(new != NULL);
-    new->noNodes = g->nV;
-    new->values = calloc(g->nV, sizeof(double));
+    new->noNodes = numVerticies(g);
+    new->values = calloc(numVerticies(g), sizeof(double));
     assert(new->values != NULL);
     Vertex v;
-    for (v = 0; v < g->nV; v++) {
+    for (v = 0; v < numVerticies(g); v++) {
         new->values[v] = countIn(g, v);
     }
     return *new;
@@ -60,11 +75,11 @@ NodeValues degreeCentrality(Graph g) {
     assert(g != NULL);
     NodeValues *new = malloc(sizeof(NodeValues));
     assert(new != NULL);
-    new->noNodes = g->nV;
-    new->values = calloc(g->nV, sizeof(double));
+    new->noNodes = numVerticies(g);
+    new->values = calloc(numVerticies(g), sizeof(double));
     assert(new->values != NULL);
     Vertex v;
-    for (v = 0; v < g->nV; v++) {
+    for (v = 0; v < numVerticies(g); v++) {
         new->values[v] = countIn(g, v) + countOut(g, v);
     }
     return *new;
@@ -74,20 +89,19 @@ NodeValues closenessCentrality(Graph g) {
     assert(g != NULL);
     NodeValues *new = malloc(sizeof(NodeValues));
     assert(new != NULL);
-    new->noNodes = g->nV;
-    new->values = calloc(g->nV, sizeof(double));
+    new->noNodes = numVerticies(g);
+    new->values = calloc(numVerticies(g), sizeof(double));
     assert(new->values != NULL);
     ShortestPaths *sp = malloc(sizeof(struct ShortestPaths));
     assert(sp != NULL);
     Vertex v;
     // int weight, noOutEdges, noInEdges;
-    for (v = 0; v < g->nV; v++){
+    for (v = 0; v < numVerticies(g); v++){
         // weight = countOutW(g, v);
         // noOutEdges = countOut(g, v);
         new->values[v] = countOut(g, v) / countOutW(g, v);
     }
-    NodeValues throwAway = {0};
-    return throwAway;
+    return *new;
 }
 
 NodeValues betweennessCentrality(Graph g) {
