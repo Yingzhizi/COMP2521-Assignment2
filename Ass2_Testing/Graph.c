@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "Graph.h"
 #include "Dijkstra.h"
-#include "CentralityMeasures.c"
+
 typedef struct GraphRep {
     int nV;  //number of vertices in the graph
     int nE;  //number of edges in the graph
@@ -12,15 +12,10 @@ typedef struct GraphRep {
     adjListNode **inedges;  //edge array (ingoing edges)
 } GraphRep;
 
-
 //global functions declaration
-
-// double countOutW(Graph, Vertex);
-// int countOut(Graph, Vertex);
-// int count(AdjList);
-
 AdjList insertLL(AdjList, int);
 AdjList deleteLL(AdjList, int);
+int validV(Graph g, Vertex v);
 bool inLL(AdjList, int);
 void freeLL(AdjList);
 void showLL(AdjList);
@@ -31,6 +26,7 @@ AdjList inIncident(Graph, Vertex);
   * noNodes vertices
   *
   */
+
 Graph newGraph(int noNodes) {
 
     //Make sure noNodes is valid
@@ -65,16 +61,6 @@ Graph newGraph(int noNodes) {
 }
 
 /**
-  * This is used to check whether the vertex is valid or not
-  *
-  */
-
-int validV(Graph g, Vertex v) {
-
-    return (g != NULL && v < g->nV && v >= 0);
-}
-
-/**
   * This is used to insert an edge into the graph. It takes in
   * two vertices, a source and a destination, creates an edge
   * and gives it a weight.
@@ -102,7 +88,7 @@ void insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     }
 }
 
-//wo ai ni
+
 
 /**
   * This is used to remove an edge from the graph. It takes in a
@@ -166,28 +152,6 @@ AdjList outIncident(Graph g, Vertex v) {
     return g->edges[v];
 }
 
-
-
-
-/**
-  * Need to fix this function before commenting on it.
-  *
-  */
-// double countOutW(Graph g, Vertex v){
-//     assert(g != NULL && validV(g, v));
-//     double totalWeight = 0;
-//     ShortestPaths *sp = malloc(sizeof(ShortestPaths));
-//     assert(sp != NULL);
-//     //getting shortest path
-//     sp = dijkstra(g, v);
-//     //weight will change depending on where we are
-//     for(int j = 0; j < sp->noNodes; j++){
-//         totalWeight += sp->dist[j];
-//     }
-//
-//     return totalWeight;
-// }
-
 /**
   * Returns a list of vertices on incoming edges
   * from a given vertex.
@@ -224,15 +188,6 @@ void showGraph(Graph g) {
         //displays all nodes that forms edges towards the source node
         showLL(g->edges[i]);
     }
-
-    for (i = 0; i < g->nV; i++) {
-        int j;
-        for (j = 0; j < g->nV; j++) {
-            printf("%d -> %d: %lfpath\n", i, j, countPath(g, i, j));
-            //countBetween(g, i, j, 1);
-            printf("Betweeness of 1: %lf\n", countBetween(g, i, j, 1));
-        }
-    }
 }
 
 /**
@@ -251,9 +206,11 @@ void freeGraph(Graph g) {
     free(g);
 }
 
+/* ******************************
+ * Helper functions
 
-//Helper functions - stupid adjacency list graph
-//Taken from the lecture exercises
+ * Taken from the lecture exercises
+ * ****************************** */
 
 /**
   * This makes a node for adding it into a edge list.
@@ -271,6 +228,15 @@ adjListNode *makeNode(int n) {
     new->next = NULL;
 
     return new;
+}
+
+/**
+  * This is used to check whether the vertex is valid or not
+  *
+  */
+
+int validV(Graph g, Vertex v) {
+    return (g != NULL && v < g->nV && v >= 0);
 }
 
 /**
