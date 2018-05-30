@@ -11,8 +11,8 @@ int main(){
 	// how to use graph vis
 
   Graph g = newGraph(3);
-  insertEdge(g,0,1,1);
-  insertEdge(g,1,2,2);
+  insertEdge(g,11,0,5);
+  insertEdge(g,11,0,0);
   insertEdge(g,2,0,1);
   showGraph(g);
 
