@@ -228,7 +228,9 @@ void showGraph(Graph g) {
     for (i = 0; i < g->nV; i++) {
         int j;
         for (j = 0; j < g->nV; j++) {
-            printf("%d -> %d: %dpath\n", i, j, countPath(g, i, j));
+            printf("%d -> %d: %lfpath\n", i, j, countPath(g, i, j));
+            //countBetween(g, i, j, 1);
+            printf("Betweeness of 1: %lf\n", countBetween(g, i, j, 1));
         }
     }
 }

@@ -142,13 +142,14 @@ NodeValues closenessCentrality(Graph g) {
 
 //count how many path exists in graph start from src to dest
 //sigma s_t
-int countPath(Graph g, Vertex src, Vertex dest) {
+//correct
+double countPath(Graph g, Vertex s, Vertex t) {
     //checkValid g and src and dest
-    ShortestPaths sp = dijkstra(g, src);
-    int count = 0;
+    ShortestPaths sp = dijkstra(g, s);
+    double count = 0;
     PredNode *curr;
-    if (sp.dist[dest] != 0 && sp.pred[dest] != NULL) {
-        curr = sp.pred[dest];
+    if (sp.dist[t] != 0 && sp.pred[t] != NULL) {
+        curr = sp.pred[t];
         while(curr != NULL) {
             count++;
             curr = curr->next;
@@ -159,6 +160,36 @@ int countPath(Graph g, Vertex src, Vertex dest) {
 
 //count how many path exist in graph start from src to dest invlove 'v'
 //sigma s_t (v)
+//we set that s != t, t != v, s != v
+//I think it's works now
+double countBetween(Graph g, Vertex s, Vertex t, Vertex v) {
+    ShortestPaths sp = dijkstra(g, s);
+    double count = 0;
+    PredNode *curr;
+    //printf("countBeforeif: %d\n", count);
+    //fix the stupid not equal check later
+    if (sp.dist[t] != 0 && sp.pred[t] != NULL && (t != v && t != s && s != v && s != t && v != s && v != t)) {
+        //printf("I'm here\n");
+        curr = sp.pred[t];
+        while(curr != NULL) {
+            if (curr->v == v) {
+                count++;
+            } else {
+                PredNode *tmp = sp.pred[curr->v];
+                while (tmp != NULL) {
+                    if (tmp->v == v) {
+                        count++;
+                        tmp = tmp->next;
+                    } else {
+                        tmp = sp.pred[tmp->v];
+                    }
+                }
+            }
+            curr = curr->next;
+        }
+    }
+    return count;
+}
 
 // int inPath(Vertex src, Vertex dest) {
 //     //return 1 if in
@@ -167,20 +198,32 @@ int countPath(Graph g, Vertex src, Vertex dest) {
 
 NodeValues betweennessCentrality(Graph g) {
     //one sympathy mark please
-    // assert(g != NULL);
-    // NodeValues *new = malloc(sizeof(NodeValues));
-    // assert(new != NULL);
-    // new->noNodes = numVerticies(g);
-    // new->values = calloc(numVerticies(g), sizeof(double));
-    // assert(new->values != NULL);
-    // for (v = 0; v < numVerticies(g); v++){
-    //
-    //     new->values[v] = (nodereach * (reachable(g, v) - 1)) / ((numVerticies(g) - 1) * countOutW(g, v));
-    //
-    // }
+    assert(g != NULL);
+    NodeValues *new = malloc(sizeof(NodeValues));
+    assert(new != NULL);
+    new->noNodes = numVerticies(g);
+    new->values = calloc(numVerticies(g), sizeof(double));
+    assert(new->values != NULL);
+    for (int v = 0; v < numVerticies(g); v++){
+        double value = 0;
+        int i = 0;
+        while (i < numVerticies(g)) {
+            Vertex j = 0;
+            while (j < numVerticies(g)) {
+                if (i != j && i != v && j != v) {
+                    if(countPath(g, i ,j) != 0){
+                        value += countBetween(g, i, j, v) / countPath(g, i, j);
+                    }
+                }
+                j++;
+            }
+            i++;
+        }
+        new->values[v] = value;
 
-    NodeValues throwAway = {0};
-    return throwAway;
+    }
+
+    return *new;
 }
 
 NodeValues betweennessCentralityNormalised(Graph g) {
