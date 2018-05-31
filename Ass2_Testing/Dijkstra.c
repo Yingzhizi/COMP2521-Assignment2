@@ -2,7 +2,6 @@
 // Dijkstra ADT interface for Ass2 (COMP2521)
 #include "Dijkstra.h"
 #include "PQ.h"
-//#include "Graph.c"
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>

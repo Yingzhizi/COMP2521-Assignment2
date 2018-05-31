@@ -16,7 +16,7 @@ double countPathVia(Graph g, Vertex s, Vertex t, Vertex v);
 double countPathHelper(ShortestPaths sp, Vertex s, Vertex t);
 double countPathViaHelper(ShortestPaths sp, Vertex s, Vertex t, Vertex v);
 
-
+//
 NodeValues outDegreeCentrality(Graph g) {
     assert(g != NULL);
 
@@ -106,6 +106,7 @@ NodeValues betweennessCentrality(Graph g) {
     new->noNodes = numVerticies(g);
     new->values = calloc(numVerticies(g), sizeof(double));
     assert(new->values != NULL);
+
     for (Vertex v = 0; v < numVerticies(g); v++){
         double value = 0;
         for (Vertex i = 0; i < numVerticies(g); i++) {
@@ -156,111 +157,141 @@ void  freeNodeValues(NodeValues v) {
  * Helper functions
  * ****************************** */
 
- /**
-   * This helps us to count the number of nodes within the edges arrays.
-   * Used to count the outgoing edges and incoming edges.
-   * Used in CentralityMeasures.
-   */
- int countNode(AdjList L) {
+/**
+  * This helps us to count the number of nodes within the edges arrays.
+  * Used to count the outgoing edges and incoming edges.
+  * Used in CentralityMeasures.
+  */
+int countNode(AdjList L) {
 
-     int count = 0;
+    int count = 0;
 
-     adjListNode *curr = L;
-     while (curr) {
-         count++;
-         curr = curr->next;
-     }
+    adjListNode *curr = L;
+    while (curr) {
+        count++;
+        curr = curr->next;
+    }
 
-     return count;
- }
-
-
- /**
-   * Returns the amount of nodes in an outgoing edge
-   * array from a given vertex. Used for CentralityMeasures.
-   *
-   */
- int countOut(Graph g, Vertex v) {
-     return countNode(outIncident(g, v));
- }
+    return count;
+}
 
 
- /**
-   * Returns the amount of ndoes in an ingoing edge array
-   * from a given vertex. Used for CnetralityMeasures.
-   *
-   */
- int countIn(Graph g, Vertex v) {
-     return countNode(inIncident(g, v));
- }
+/**
+  * Returns the amount of nodes in an outgoing edge
+  * array from a given vertex. Used for outDegreeCentrality measure.
+  *
+  */
+int countOut(Graph g, Vertex v) {
+    return countNode(outIncident(g, v));
+}
 
 
- int countReachable(Graph g, Vertex v) {
-     ShortestPaths sp = dijkstra(g, v);
-     int count = 0;
-     for (int i = 0; i < numVerticies(g); i++) {
-         if (sp.dist[i] != 0){
-             count++;
-         }
-     }
-     count += 1;
-     return count;
- }
+/**
+  * Returns the amount of ndoes in an ingoing edge array
+  * from a given vertex. Used for inDegreeCentrality measure.
+  *
+  */
+int countIn(Graph g, Vertex v) {
+    return countNode(inIncident(g, v));
+}
 
 
- double outWeight(Graph g, Vertex v) {
-     double totalWeight = 0;
-     //getting shortest path
-     Vertex w;
-     ShortestPaths sp;
-     for (w = 0; w < numVerticies(g); w++) {
-         sp = dijkstra(g, v);
-         totalWeight += sp.dist[w];
-     }
-     return totalWeight;
- }
+/**
+  * Returns the amount of ndoes can reacheable from a given vertex
+  * Used for closenessCentrality measure
+  */
+int countReachable(Graph g, Vertex v) {
+    ShortestPaths sp = dijkstra(g, v);
+
+    int count = 0;
+    for (int i = 0; i < numVerticies(g); i++) {
+        // dist[i] is not 0 means there exist path from vertex v -> i
+        if (sp.dist[i] != 0){
+            count++;
+        }
+    }
+    // vertex v can also reach itself, but dist[v] is 0
+    count += 1;
+    return count;
+}
+
+/**
+  * Count the total weight of the shortest paths between vertex v
+  * to all the other vertexs
+  * Used for closenessCentrality measure
+  */
+double outWeight(Graph g, Vertex v) {
+
+    double totalWeight = 0;
+    Vertex w;
+    // get shortest path of vertex v
+    ShortestPaths sp = dijkstra(g, v);
+
+    for (w = 0; w < numVerticies(g); w++) {
+        // go through every index in the dist array of shortest path
+        totalWeight += sp.dist[w];
+    }
+    return totalWeight;
+}
 
 
- // Count how many path exists in graph start from src to dest
- double countPath(Graph g, Vertex s, Vertex t) {
-     ShortestPaths sp = dijkstra(g, s);
-     return countPathHelper(sp, s, t);
- }
+// Count how many path exists in graph start from vertex s to Vertex t
+double countPath(Graph g, Vertex s, Vertex t) {
+    ShortestPaths sp = dijkstra(g, s);
+    return countPathHelper(sp, s, t);
+}
+
+// helper function to help countPath from vertex s to Vertex t
+double countPathHelper(ShortestPaths sp, Vertex s, Vertex t) {
+
+    // Base case of this recursion
+    // when we call this function, we wont meet a situation that
+    // s == t in the beginning
+    // so this if statement will only check if (s == pred->v)
+    // which pred = pred[t], if equal, then means Vertex s can get to Vertex t
+    if (s == t) {
+        return 1;
+    }
 
 
- double countPathHelper(ShortestPaths sp, Vertex s, Vertex t) {
-     if (s == t) {
-         return 1;
-     }
-
-     double count = 0;
-     PredNode *pred = sp.pred[t];
-     while (pred) {
-         count += countPathHelper(sp, s, pred->v);
-         pred = pred->next;
-     }
-     return count;
- }
+    double count = 0;
+    PredNode *pred = sp.pred[t];
+    while (pred) {
+        count += countPathHelper(sp, s, pred->v);
+        pred = pred->next;
+    }
+    return count;
+}
 
 
  //count how many path exist in graph start from src to dest invlove 'v'
- double countPathVia(Graph g, Vertex s, Vertex t, Vertex v) {
-     ShortestPaths sp = dijkstra(g, s);
-     return countPathViaHelper(sp, s, t, v);
- }
+double countPathVia(Graph g, Vertex s, Vertex t, Vertex v) {
+    ShortestPaths sp = dijkstra(g, s);
+    return countPathViaHelper(sp, s, t, v);
+}
 
+// helper function to help countPath via Vertex v from vertex s to Vertex t
+double countPathViaHelper(ShortestPaths sp, Vertex s, Vertex t, Vertex v) {
 
- double countPathViaHelper(ShortestPaths sp, Vertex s, Vertex t, Vertex v) {
+    //if (s == t) { return 0; }
 
-     if (s == t) { return 0; }
+    // Base Case of this recursion
+    // when we call this function, we wont meet a situation that
+    // t == v in the beginning
+    // so this if statement will only check if (pred->v == v)
+    // which pred = pred[t]
+    // if equal, then means Vertex v exist between s and t
+    if (t == v) {
+        // return the paths number go though Vertex s to v
+        return countPathHelper(sp, s, v);
+    }
 
-     if (t == v) { return countPathHelper(sp, s, v); }
-
-     double count = 0;
-     PredNode *pred = sp.pred[t];
-     while (pred) {
-         count += countPathViaHelper(sp, s, pred->v, v);
-         pred = pred->next;
-     }
-     return count;
- }
+    double count = 0;
+    PredNode *pred = sp.pred[t];
+    while (pred) {
+        // count the path number from vertex s to the pred node of t via vertex v
+        count += countPathViaHelper(sp, s, pred->v, v);
+        pred = pred->next;
+    }
+    return count;
+}
