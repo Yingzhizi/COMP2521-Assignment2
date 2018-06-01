@@ -16,25 +16,29 @@ double countPathVia(Graph g, Vertex s, Vertex t, Vertex v);
 double countPathHelper(ShortestPaths sp, Vertex s, Vertex t);
 double countPathViaHelper(ShortestPaths sp, Vertex s, Vertex t, Vertex v);
 
-//
+// count the number of outgoing edges of every vertex in a given graph
 NodeValues outDegreeCentrality(Graph g) {
     assert(g != NULL);
 
     NodeValues *new = malloc(sizeof(NodeValues));
     assert(new != NULL);
 
-    new->noNodes = numVerticies(g);
-    new->values = calloc(new->noNodes, sizeof(double));
+    int nV = numVerticies(g);
+    new->noNodes = nV;
+    new->values = calloc(nV, sizeof(double));
     assert(new->values != NULL);
 
     Vertex v;
     for (v = 0; v < new->noNodes; v++) {
+
+        // countOut is a helper function
         new->values[v] = countOut(g, v);
     }
 
     return *new;
 }
 
+// count the number of incoming edges of every vertex in a given graph
 NodeValues inDegreeCentrality(Graph g) {
     assert(g != NULL);
 
@@ -48,12 +52,16 @@ NodeValues inDegreeCentrality(Graph g) {
 
     Vertex v;
     for (v = 0; v < nV; v++) {
+
+        // countIn is a helper function
         new->values[v] = countIn(g, v);
     }
 
     return *new;
 }
 
+// count the sum of incoming edges and outgoing edges
+// of every vertex in a given graph
 NodeValues degreeCentrality(Graph g) {
     assert(g != NULL);
 
@@ -67,11 +75,14 @@ NodeValues degreeCentrality(Graph g) {
 
     Vertex v;
     for (v = 0; v < nV; v++) {
+
+        // Degree(v) = inDegree(v) + outDegree(v)
         new->values[v] = countIn(g, v) + countOut(g, v);
     }
     return *new;
 }
 
+//
 NodeValues closenessCentrality(Graph g) {
     assert(g != NULL);
 
@@ -86,11 +97,13 @@ NodeValues closenessCentrality(Graph g) {
     Vertex v;
     double nodereach;
     double nodetotal;
-    // int weight, noOutEdges, noInEdges;
+
     for (v = 0; v < nV; v++){
         nodereach = countReachable(g, v) - 1;
         nodetotal = numVerticies(g) - 1;
-        new->values[v] = (nodereach * (countReachable(g, v) - 1)) / ((numVerticies(g) - 1) * outWeight(g, v));
+
+        // according to Wasserman and Faust formula
+        new->values[v] = (nodereach * nodereach) / (nodetotal * outWeight(g, v));
         if (nodereach == 0) {
             new->values[v] = 0;
         }
